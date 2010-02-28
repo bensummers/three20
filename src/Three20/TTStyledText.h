@@ -149,6 +149,11 @@
  */
 - (TTStyledNode*)getElementByClassName:(NSString*)className;
 
+/**
+ *
+ */
+- (NSString*)plainText;
+
 @end
 
 

@@ -17,6 +17,7 @@
 #import "Three20/TTTableItem.h"
 
 #import "Three20/TTGlobalCore.h"
+#import "Three20/TTStyledText.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -47,6 +48,17 @@
 }
 
 - (void)encodeWithCoder:(NSCoder*)encoder {
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Support for TTTableViewCell's text copying
+
+- (NSString*)textForCopyingToPasteboard {
+	if([self respondsToSelector:@selector(text)])
+	{
+		return [(id)self text];
+	}
+	return nil;
 }
 
 @end
@@ -332,6 +344,11 @@
   if (self.imageURL) {
     [encoder encodeObject:self.imageURL forKey:@"imageURL"];
   }
+}
+
+
+- (NSString*)textForCopyingToPasteboard {
+	return [NSString stringWithFormat:@"%@\n%@", self.text, self.subtitle];
 }
 
 @end
@@ -646,6 +663,11 @@
   if (self.text) {
     [encoder encodeObject:self.text forKey:@"text"];
   }
+}
+
+
+- (NSString*)textForCopyingToPasteboard {
+	return [self.text plainText];
 }
 
 @end
