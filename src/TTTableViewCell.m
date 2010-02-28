@@ -66,7 +66,6 @@
 // Perform copy operations, asking the delegate for 
 - (void)copy:(id)sender {
 	NSString *text = [self textForCopyingToPasteboard];
-NSLog(@"text for copying = '%@'", text);
 	if(text != nil)
 	{
 		[[UIPasteboard generalPasteboard] setString:text];
