@@ -508,13 +508,27 @@ static const CGFloat kDefaultMessageImageHeight = 34;
     
   CGFloat height = self.contentView.height;
   CGFloat width = self.contentView.width - (height + kSmallMargin);
-  CGFloat left = 0;
-  
-  if (_imageView2) {
-    _imageView2.frame = CGRectMake(0, 0, height, height);
-    left = _imageView2.right + kSmallMargin;
-  } else {
-    left = kHPadding;
+  CGFloat left = kHPadding;
+
+  if (_imageView2.urlPath) {
+    // Code modified using TTTableImageItemCell as a model - use the image at the unscaled size
+    TTTableSubtitleItem* item = self.object;
+    UIImage* image = item.imageURL ? [[TTURLCache sharedCache] imageForURL:item.imageURL] : nil;
+    if (!image) {
+      image = item.defaultImage;
+    }
+
+    CGFloat iconWidth = image
+      ? image.size.width
+      : (item.imageURL ? kDefaultImageSize : 0);
+    CGFloat iconHeight = image
+      ? image.size.height
+      : (item.imageURL ? kDefaultImageSize : 0);
+
+    _imageView2.frame = CGRectMake(kHPadding, floor(self.height/2 - iconHeight/2),
+                                 iconWidth, iconHeight);
+
+    left += kHPadding + iconWidth;
   }
 
   if (self.detailTextLabel.text.length) {
