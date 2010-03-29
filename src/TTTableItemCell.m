@@ -1097,6 +1097,13 @@ static const CGFloat kDefaultMessageImageHeight = 34;
     padding += kDisclosureIndicatorWidth;
   }
   
+  if (item.imageURL) {
+    UIImage* image = item.imageURL ? [[TTURLCache sharedCache] imageForURL:item.imageURL] : nil;
+    if(image != nil) {
+      padding += (image.size.width + kHPadding);
+    }
+  }
+
   item.text.width = tableView.width - padding;
   
   return item.text.height + item.padding.top + item.padding.bottom + item.margin.top + item.margin.bottom;
@@ -1107,6 +1114,7 @@ static const CGFloat kDefaultMessageImageHeight = 34;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString*)identifier {
   if (self = [super initWithStyle:style reuseIdentifier:identifier]) {
+    _imageView2 = nil;
     _label = [[TTStyledTextLabel alloc] init];
     _label.contentMode = UIViewContentModeLeft;
     [self.contentView addSubview:_label];
@@ -1115,6 +1123,7 @@ static const CGFloat kDefaultMessageImageHeight = 34;
 }
 
 - (void)dealloc {
+  TT_RELEASE_SAFELY(_imageView2);
   TT_RELEASE_SAFELY(_label);
   [super dealloc];
 }
@@ -1125,8 +1134,23 @@ static const CGFloat kDefaultMessageImageHeight = 34;
 - (void)layoutSubviews {
   [super layoutSubviews];
   
+  // Basic frame for text
   TTTableStyledTextItem* item = self.object;
-  _label.frame = UIEdgeInsetsInsetRect(self.contentView.bounds, item.margin);
+  CGRect textFrame = UIEdgeInsetsInsetRect(self.contentView.bounds, item.margin);
+  
+  // Image?
+  if (_imageView2.urlPath) {
+    UIImage* image = item.imageURL ? [[TTURLCache sharedCache] imageForURL:item.imageURL] : nil;
+    if (image != nil) {
+      _imageView2.frame = CGRectMake(kHPadding, kHPadding, image.size.width, image.size.height);
+      CGFloat w = kHPadding + image.size.width;
+      textFrame.origin.x += w;
+      textFrame.size.width -= w;
+    }
+  }
+  
+  // Set label frame
+  _label.frame = textFrame;
 }
 
 - (void)didMoveToSuperview {
@@ -1146,8 +1170,23 @@ static const CGFloat kDefaultMessageImageHeight = 34;
     TTTableStyledTextItem* item = object;
     _label.text = item.text;
     _label.contentInset = item.padding;
+    if (item.imageURL) {
+      self.imageView2.urlPath = item.imageURL;
+    }
     [self setNeedsLayout];
   }  
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// public
+
+- (TTImageView*)imageView2 {
+  if (!_imageView2) {
+    _imageView2 = [[TTImageView alloc] init];
+    [self.contentView addSubview:_imageView2];
+  }
+  return _imageView2;
 }
 
 @end

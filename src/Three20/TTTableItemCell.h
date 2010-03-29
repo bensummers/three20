@@ -87,9 +87,11 @@
 
 @interface TTStyledTextTableItemCell : TTTableLinkedItemCell {
   TTStyledTextLabel* _label;
+  TTImageView* _imageView2;
 }
 
 @property(nonatomic,readonly) TTStyledTextLabel* label;
+@property(nonatomic,readonly,retain) TTImageView* imageView2;
 
 @end
 

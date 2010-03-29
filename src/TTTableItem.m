@@ -606,6 +606,7 @@
 @implementation TTTableStyledTextItem
 
 @synthesize text = _text, margin = _margin, padding = _padding;
+@synthesize imageURL = _imageURL;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // class public
@@ -631,6 +632,15 @@
   return item;
 }
 
++ (id)itemWithText:(TTStyledText*)text imageURL:(NSString*)imageURL URL:(NSString*)URL accessoryURL:(NSString*)accessoryURL {
+  TTTableStyledTextItem* item = [[[self alloc] init] autorelease];
+  item.text = text;
+  item.imageURL = imageURL;
+  item.URL = URL;
+  item.accessoryURL = accessoryURL;
+  return item;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // NSObject
 
@@ -645,6 +655,7 @@
 
 - (void)dealloc {
   TT_RELEASE_SAFELY(_text);
+  TT_RELEASE_SAFELY(_imageURL);
   [super dealloc];
 }
 
