@@ -398,7 +398,22 @@ static NSMutableDictionary* gNamedCaches = nil;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+static id overrideImageLoadingDelegate = nil;
++ (void)setOverrideImageLoadingDelegate:(id)delegate
+{
+	overrideImageLoadingDelegate = delegate;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 - (BOOL)hasImageForURL:(NSString*)URL fromDisk:(BOOL)fromDisk {
+	if(overrideImageLoadingDelegate)
+	{
+		int n = [overrideImageLoadingDelegate ttHasImageForURL:URL];
+		if(n == 0) return NO;
+		if(n == 1) return YES;
+	}
+	
   BOOL hasImage = (nil != [_imageCache objectForKey:URL]);
 
   if (!hasImage && fromDisk) {
@@ -422,6 +437,14 @@ static NSMutableDictionary* gNamedCaches = nil;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (id)imageForURL:(NSString*)URL fromDisk:(BOOL)fromDisk {
+	if(overrideImageLoadingDelegate)
+	{
+		BOOL overriding = NO;
+		UIImage *i = [overrideImageLoadingDelegate ttImageForURL:URL overridingFlag:&overriding];
+		if(overriding) { return i; }
+	}
+	
+	
   UIImage* image = [_imageCache objectForKey:URL];
 
   if (nil == image && fromDisk) {

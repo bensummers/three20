@@ -71,6 +71,9 @@
 @property (nonatomic) NSTimeInterval invalidationAge;
 
 
+/* Hack for overriding image loading */
++ (void)setOverrideImageLoadingDelegate:(id)delegate;
+
 /**
  * Gets a shared cache identified with a unique name.
  */
