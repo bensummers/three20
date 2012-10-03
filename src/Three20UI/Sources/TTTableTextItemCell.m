@@ -137,8 +137,8 @@ static const CGFloat kMaxLabelHeight = 2000;
 
     } else if ([object isKindOfClass:[TTTableSummaryItem class]]) {
       self.textLabel.font = TTSTYLEVAR(tableSummaryFont);
-      self.textLabel.textColor = TTSTYLEVAR(tableSubTextColor);
-      self.textLabel.textAlignment = UITextAlignmentCenter;
+      self.textLabel.textColor = TTSTYLEVAR(textColor); // modified
+      self.textLabel.textAlignment = UITextAlignmentLeft; // modified
 
     } else if ([object isKindOfClass:[TTTableLongTextItem class]]) {
       self.textLabel.font = TTSTYLEVAR(font);
